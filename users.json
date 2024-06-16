@@ -1,0 +1,38 @@
+[
+  {
+    "username": "ismali",
+    "password": "$2a$12$3ukPJpCU1vZGFBxFYQMJw.eT8QJhdgLm3buznYfZfmwS18IYl2emC",
+    "ID": "B13",
+    "photo": {
+      "object": {
+        "url": "https://th.bing.com/th/id/R.152c34a899b6bf22d4da6c91b74403dd?rik=ELN9t4jt5Z7dhA&pid=ImgRaw&r=0",
+        "publicId": "null"
+      }
+    },
+    "isAdmin": "false"
+  },
+  {
+    "username": "ibrahim",
+    "password": "$2a$12$3ukPJpCU1vZGFBxFYQMJw.eT8QJhdgLm3buznYfZfmwS18IYl2emC",
+    "ID": "B15",
+    "photo": {
+      "object": {
+        "url": "https://th.bing.com/th/id/R.152c34a899b6bf22d4da6c91b74403dd?rik=ELN9t4jt5Z7dhA&pid=ImgRaw&r=0",
+        "publicId": "null"
+      }
+    },
+    "isAdmin": "false"
+  },
+  {
+    "username": "ahmed",
+    "password": "$2a$12$3ukPJpCU1vZGFBxFYQMJw.eT8QJhdgLm3buznYfZfmwS18IYl2emC",
+    "ID": "B14",
+    "photo": {
+      "object": {
+        "url": "https://th.bing.com/th/id/R.152c34a899b6bf22d4da6c91b74403dd?rik=ELN9t4jt5Z7dhA&pid=ImgRaw&r=0",
+        "publicId": "null"
+      }
+    },
+    "isAdmin": "false"
+  }
+]
