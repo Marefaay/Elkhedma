@@ -5,7 +5,7 @@ const loginAsUser = require("../services/user/loginAsUser");
 const profilePhoto = require("../services/user/profilePhoto");
 const registerAsUser = require("../services/user/registerAsUser");
 const scan = require("../services/Meeting/scan");
-const uploadQR = require("../middlewares/upload/QRSUpload");
+const uploadQR = require("../middlewares/upload/QRsUpload");
 // const uploadQR = require("../middlewares/upload/QRsUpload");
 const router = require("express").Router();
 
