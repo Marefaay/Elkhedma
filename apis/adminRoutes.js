@@ -8,6 +8,8 @@ const createMeeting = require("../services/Meeting/createMeeting");
 const deleteAll = require("../services/Meeting/deleteAll");
 const deleteMeeting = require("../services/Meeting/deleteMeeting");
 const updateMeeting = require("../services/Meeting/updateMeeting");
+const registerAsUser = require("../services/user/registerAsUser");
+
 const allUsers = require("../services/user/allUsers");
 const deleteAdmin = require("../services/admin/deleteAdmin");
 const deleteUser = require("../services/user/deleteUser");
@@ -21,6 +23,8 @@ const router = require("express").Router();
 
 router.post("/register-as-admin", adminRegisterValidation, registerAsAdmin);
 router.post("/login-as-admin", adminRegisterValidation, loginAsAdmin);
+router.post("/register-as-user", userLoginValidation, registerAsUser);
+
 router.post(
   "/profile/upload-profile-photo",
   adminAutherization,
