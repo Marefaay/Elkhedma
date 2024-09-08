@@ -17,7 +17,7 @@ const registerAsUser = async (request, response) => {
       });
       return response.json({
         status: "Success",
-        message: "User Registred Succefully",
+        message: "User Added Succefully",
       });
     } else {
       return response.json({ status: "Error", message: "ID must be unique" });
