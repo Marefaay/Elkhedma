@@ -24,7 +24,7 @@ const router = require("express").Router();
 
 router.post("/register-as-admin", adminRegisterValidation, registerAsAdmin);
 router.post("/login-as-admin", adminRegisterValidation, loginAsAdmin);
-router.post("/register-as-user", userLoginValidation, registerAsUser);
+router.post("/add-user", userLoginValidation, registerAsUser);
 
 router.post(
   "/profile/upload-profile-photo",
