@@ -9,6 +9,7 @@ const deleteAll = require("../services/Meeting/deleteAll");
 const deleteMeeting = require("../services/Meeting/deleteMeeting");
 const updateMeeting = require("../services/Meeting/updateMeeting");
 const registerAsUser = require("../services/user/registerAsUser");
+const userLoginValidation = require("../middlewares/validation/userValidation");
 
 const allUsers = require("../services/user/allUsers");
 const deleteAdmin = require("../services/admin/deleteAdmin");
