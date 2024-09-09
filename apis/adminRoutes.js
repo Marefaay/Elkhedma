@@ -42,8 +42,7 @@ router.delete(
   deleteUser
 );
 router.delete(
-  "/delete-admin/:id",
-  objectIdValidation,
+  "/delete-admin",
   adminAutherization,
   deleteAdmin
 );
