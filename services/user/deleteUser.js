@@ -16,11 +16,14 @@ const deleteUser = async (request, response) => {
   if (!user) {
     return response.json({
       status: "Error",
-      message: "There is No User Founded With This ID",
+      message: "Oops!,There is No User Founded With This ID",
     });
   }
   ///user Is Found
   await userModel.deleteOne({ ID });
-  return response.json({ stauts: "Success", message: "User Delted Succeully" });
+  return response.json({
+    stauts: "Success",
+    message: "Congratulations,User Delted Succeully",
+  });
 };
 module.exports = deleteUser;

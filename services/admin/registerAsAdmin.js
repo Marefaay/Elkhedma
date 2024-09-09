@@ -24,17 +24,20 @@ const registerAsAdmin = async (request, response) => {
           });
           return response.json({
             status: "Success",
-            message: "Admin Registred Succefully",
+            message: "Congratulations,Admin Registred Succefully",
           });
         }
       });
     } else {
-      return response.json({ status: "Success", message: "ID must be unique" });
+      return response.json({
+        status: "Success",
+        message: "Oops!,ID must be unique",
+      });
     }
   } else {
     return response.json({
       status: "Success",
-      message: "Username  Already exists",
+      message: "Oops!,Username  Already exists",
     });
   }
 };

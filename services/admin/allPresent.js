@@ -3,10 +3,10 @@ const userModel = require("../../models/userModel");
 
 const allPresent = async (request, response) => {
   const { meetingName } = request.body;
-  if ((meetingName === "")) {
+  if (meetingName === "") {
     return response.json({
       status: "Error",
-      message: "Please Enter Meeting Name",
+      message: "Oops!,Please Enter Meeting Name",
     });
   }
   //find meeting
@@ -14,16 +14,19 @@ const allPresent = async (request, response) => {
   if (!meeting) {
     return response.json({
       status: "Error",
-      message: "This Meeting Is Not Exist",
+      message: "Oops!,This Meeting Is Not Exist",
     });
   }
   const presentUser = [];
   const users = await userModel.find({});
   if (users.length == 0) {
-    return response.json({ status: "Error", message: "No User Are Founded" });
+    return response.json({
+      status: "Error",
+      message: "Oops!,No User Are Founded",
+    });
   }
   users.forEach(async (user) => {
-    const meetingExist = user.meeting.includes(id);
+    const meetingExist = user.meeting.includes(meetingName);
     if (meetingExist) {
       presentUser.push(user.username);
       // await presentUser.save();

@@ -5,9 +5,9 @@ const userAutherization = async (request, response, next) => {
   const token = request.header("token");
   jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
     if (err) {
-      response.json({ message: "Error", err });
+      return response.json({ status: "Error", message: err.message });
     } else {
-      request.id=decoded.id
+      request.id = decoded.id;
       next();
     }
   });

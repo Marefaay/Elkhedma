@@ -36,10 +36,13 @@ const profilePhoto = async (request, response) => {
     fs.unlinkSync(image);
     return response.json({
       status: "Success",
-      message: "Your Profile Photo Uploaded Succefully",
+      message: "Congratularions,Your Profile Photo Uploaded Succefully",
     });
   } else {
-    return response.json({ status: "Error", message: "no file to upload" });
+    return response.json({
+      status: "Error",
+      message: "Oops!,No file to upload",
+    });
   }
 };
 module.exports = profilePhoto;

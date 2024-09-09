@@ -27,7 +27,7 @@ const scan = async (request, response) => {
           if (!user) {
             return response.json({
               status: "Error",
-              message: "User Not found",
+              message: "Oops!,User Not found",
             });
           }
           console.log(user);
@@ -38,21 +38,21 @@ const scan = async (request, response) => {
           if (!meeting) {
             return response.json({
               status: "Error",
-              message: "Meeting Is Not Founds",
+              message: "oops!,Meeting Is Not Founds",
             });
           }
           console.log(meeting);
           if (user.meeting.includes(meeting._id)) {
             return response.json({
               status: "Error",
-              message: "You Already Record Attendance fro this meeting",
+              message: "Oops!,You Already Record Attendance fro this meeting",
             });
           }
           user.meeting.push(meeting._id);
           await user.save();
           return response.json({
             status: "Success",
-            message: "Meeting Attendance Reorded Succefully",
+            message: "Congratularrions,Meeting Attendance Reorded Succefully",
           });
         }
       };
@@ -62,7 +62,10 @@ const scan = async (request, response) => {
       return response.json({ status: "Error", message: err.message });
     }
   } else {
-    return response.json({ status: "Error", message: "No File To Upload" });
+    return response.json({
+      status: "Error",
+      message: "Oops!,No File To Upload",
+    });
   }
 };
 module.exports = scan;

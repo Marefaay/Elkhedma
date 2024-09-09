@@ -11,7 +11,7 @@ const createMeeting = async (request, response) => {
   if (meeting) {
     return response.json({
       status: "Error",
-      message: "This Meeting Already Exist",
+      message: "Oops!,This Meeting Already Exist",
     });
   }
   //meeting not exist
@@ -52,7 +52,7 @@ const createMeeting = async (request, response) => {
 
       return response.json({
         status: "Success",
-        message: "Meeting created succefullly",
+        message: "Congratulations,Meeting created succefullly",
         meeting,
       });
     }

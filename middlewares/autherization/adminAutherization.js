@@ -5,7 +5,7 @@ const adminAutherization = async (request, response, next) => {
   const token = request.header("token");
   jwt.verify(token, process.env.SECRET_KEY, async (err, decoded) => {
     if (err) {
-      response.json({ message: "Error", err });
+      return response.json({ status: "Error", message: err.message });
     } else {
       //if is admin==>true
       if (decoded.isAdmin) {
@@ -14,8 +14,10 @@ const adminAutherization = async (request, response, next) => {
       }
       //if is admin==>flase
       else {
-        response.json({
-          message: "You are not allowed to acces this ,only admins",
+        return response.json({
+          status: "Error",
+
+          message: "Oops!,You are not allowed to acces this ,only admins",
         });
       }
     }

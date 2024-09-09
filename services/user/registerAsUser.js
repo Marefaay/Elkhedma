@@ -17,13 +17,19 @@ const registerAsUser = async (request, response) => {
       });
       return response.json({
         status: "Success",
-        message: "User Added Succefully",
+        message: "Congratulations,User Added Succefully",
       });
     } else {
-      return response.json({ status: "Error", message: "ID must be unique" });
+      return response.json({
+        status: "Error",
+        message: "Oops!,ID must be unique",
+      });
     }
   } else {
-   return response.json({status:"Error", message: "Username  Already exists" });
+    return response.json({
+      status: "Error",
+      message: "Oops!,Username  Already exists",
+    });
   }
 };
 module.exports = registerAsUser;

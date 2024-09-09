@@ -18,8 +18,12 @@ const allAdmins = async (request, response) => {
   //Find All Admins
   const admins = await adminModel.find({});
   if (admins.length == 0) {
-    return response.json({ status: "Error", message: "No Admins" });
+    return response.json({ status: "Error", message: "Oops!,No Admins" });
   }
-  return response.json({ status: "Success", message: admins });
+  return response.json({
+    status: "Success",
+    message: "Congratulations,All Admins Retrived Succcefully",
+    admins,
+  });
 };
 module.exports = allAdmins;

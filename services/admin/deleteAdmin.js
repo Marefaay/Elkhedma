@@ -7,7 +7,7 @@ const deleteAdmin = async (request, response) => {
   if (!ID.match(regEX)) {
     return response.json({
       status: "Error",
-      message: "Please Enter Valid ID Such as 'B75' Or 'G75' ",
+      message: "Oops!,Please Enter Valid ID Such as 'B75' Or 'G75' ",
     });
   }
   ///find Admin
@@ -16,7 +16,7 @@ const deleteAdmin = async (request, response) => {
   if (!admin) {
     return response.json({
       status: "Error",
-      message: "There Is No Admin With This ID",
+      message: "Oops!,There Is No Admin With This ID",
     });
   }
   //remove from cloudniary
@@ -27,7 +27,7 @@ const deleteAdmin = async (request, response) => {
   await adminModel.deleteOne({ ID });
   return response.json({
     status: "Success",
-    message: "Admin Deleted Succefully",
+    message: "Congratulaions,Admin Deleted Succefully",
   });
 };
 
