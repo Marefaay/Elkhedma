@@ -2,9 +2,15 @@ const meetingModel = require("../../models/meetingModel");
 const userModel = require("../../models/userModel");
 
 const allPresent = async (request, response) => {
-  const { id } = request.params;
+  const { meetingName } = request.body;
+  if ((meetingName === "")) {
+    return response.json({
+      status: "Error",
+      message: "Please Enter Meeting Name",
+    });
+  }
   //find meeting
-  const meeting = await meetingModel.findOne({ _id: id });
+  const meeting = await meetingModel.findOne({ meetingName });
   if (!meeting) {
     return response.json({
       status: "Error",

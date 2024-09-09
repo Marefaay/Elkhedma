@@ -20,6 +20,7 @@ const registerAsAdmin = require("../services/admin/registerAsAdmin");
 const adminMeetings = require("../services/Meeting/adminsMeetings");
 const meetingValidation = require("../middlewares/validation/meetingValidation");
 const allPresent = require("../services/admin/allPresent");
+const allPresentValiddation = require("../middlewares/validation/allPresentValiddation");
 const router = require("express").Router();
 
 router.post("/register-as-admin", adminRegisterValidation, registerAsAdmin);
@@ -41,11 +42,7 @@ router.delete(
   adminAutherization,
   deleteUser
 );
-router.delete(
-  "/delete-admin",
-  adminAutherization,
-  deleteAdmin
-);
+router.delete("/delete-admin", adminAutherization, deleteAdmin);
 router.post(
   "/meetings/create-meeting",
   adminAutherization,
@@ -68,5 +65,10 @@ router.put(
   updateMeeting
 );
 router.get("/admin-meetigs", adminAutherization, adminMeetings);
-router.get("/all-present/:id", adminAutherization, allPresent);
+router.get(
+  "/all-present",
+  adminAutherization,
+  allPresentValiddation,
+  allPresent
+);
 module.exports = router;
