@@ -36,8 +36,8 @@ router.post(
 router.get("/all-users", adminAutherization, allUsers);
 // router.get("/all-admins", adminAutherization, allAdmins);
 router.delete(
-  "/delete-user/:id",
-  objectIdValidation,
+  "/delete-user",
+
   adminAutherization,
   deleteUser
 );

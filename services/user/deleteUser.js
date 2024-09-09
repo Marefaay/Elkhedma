@@ -1,28 +1,26 @@
 const userModel = require("../../models/userModel");
-const removeFromCloudinary = require("../../utils/removeFromCloudinary");
 
 const deleteUser = async (request, response) => {
-  const { id } = request.params;
-  //find user
-  const user = await userModel.findOne({
-    _id: id,
-  });
+  const { ID } = request.body;
+  ///check ID
+  const regEX = /(b|g)(\d{2})$/i;
+  if (!ID.match(regEX)) {
+    return response.json({
+      status: "Error",
+      message: "Please Enter Valid ID Such as 'B75' Or 'G75' ",
+    });
+  }
+  ///find user
+  const user = await userModel.findOne({ ID });
+  ///user Is Not Found
   if (!user) {
     return response.json({
       status: "Error",
-      message: "This User IS not Found",
+      message: "There is No User Founded With This ID",
     });
   }
-  console.log(user.photo);
-  //remove from cloud
-  if (user.photo.publicId != null) {
-    await removeFromCloudinary(user.photo.publicId);
-  }
-  //delete user itself
-  await userModel.deleteOne({ _id: id });
-  return response.json({
-    status: "Success",
-    messsage: "User deleted Succefully",
-  });
+  ///user Is Found
+  await userModel.deleteOne({ ID });
+  return response.json({ stauts: "Success", message: "User Delted Succeully" });
 };
 module.exports = deleteUser;
