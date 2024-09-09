@@ -5,6 +5,11 @@ const allUsers = async (request, response) => {
   if (users.length == 0) {
     return response.json({ status: "Error", message: "There Is No Student" });
   }
-  return response.json({ status: "Success", message: "Succes", count, users });
+  return response.json({
+    status: "Success",
+    message: "All Students Retrived Sucfully",
+    count,
+    users,
+  });
 };
 module.exports = allUsers;
