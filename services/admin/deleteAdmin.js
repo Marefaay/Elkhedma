@@ -13,6 +13,12 @@ const deleteAdmin = async (request, response) => {
   ///find Admin
   const admin = await adminModel.findOne({ ID });
   console.log(admin);
+  if (!admin) {
+    return response.json({
+      status: "Error",
+      message: "There Is No Admin With This ID",
+    });
+  }
   //remove from cloudniary
   if (admin.photo.publicId != null) {
     await removeFromCloudinary(admin.photo.publicId);
