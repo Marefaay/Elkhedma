@@ -24,19 +24,19 @@ const loginAsAdmin = async (request, response) => {
       } else {
         return response.json({
           stuats: "Error",
-          message: `Password ('${password}') in correct`,
+          message: `Oops!,Password ('${password}') in correct`,
         });
       }
     } else {
       return response.json({
         status: "Error",
-        message: `Admin ID('${ID}') Is Not Correct`,
+        message: `Oops!,Admin ID('${ID}') Is Not Correct`,
       });
     }
   } else {
     return response.json({
       status: "Error",
-      message: `Username ('${username}') Is Not Exist`,
+      message: `Oops!,Username ('${username}') Is Not Exist`,
     });
   }
 };

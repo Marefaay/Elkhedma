@@ -6,11 +6,14 @@ const allUsers = async (request, response) => {
   );
   const count = await userModel.find({}).count();
   if (users.length == 0) {
-    return response.json({ status: "Error", message: "There Is No Student" });
+    return response.json({
+      status: "Error",
+      message: "Oops!,There Is No Student",
+    });
   }
   return response.json({
     status: "Success",
-    message: "All Students Retrived Sucfully",
+    message: "Confratulations,All Students Retrived Sucfully",
     count,
     users,
   });
