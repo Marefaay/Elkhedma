@@ -9,7 +9,7 @@ const scan = async (request, response) => {
     try {
       //read qr code
       const buffer = fs.readFileSync(
-        __dirname + `../../../QRS/${request.file.filename}`
+        __dirname + `/QRS/${request.file.filename}`
       );
       //read qr code as a buffer
       const image = await jimp.read(buffer);
