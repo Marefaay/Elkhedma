@@ -10,7 +10,7 @@ const scan = async (request, response) => {
     try {
       // Build the correct file path
       const filePath = path.join(__dirname, "../../../QRS", request.file.filename);
-
+console.log(filePath)
       // Check if file exists before reading
       if (!fs.existsSync(filePath)) {
         return response.json({
