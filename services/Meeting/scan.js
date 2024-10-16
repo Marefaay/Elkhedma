@@ -9,7 +9,7 @@ const meetingModel = require("../../models/meetingModel");
 // Configure Multer to store uploaded files in /tmp
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "../../../QRS"); // Store files in the /tmp directory
+    cb(null, path.join(__dirname,"../../../QRS")); // Store files in the /tmp directory
   },
   filename: (req, file, cb) => {
     cb(null, file.originalname); // Save with the original filename
