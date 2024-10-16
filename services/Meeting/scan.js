@@ -6,10 +6,16 @@ const multer = require("multer"); // Multer for file uploads
 const userModel = require("../../models/userModel");
 const meetingModel = require("../../models/meetingModel");
 
-// Configure Multer to store uploaded files in /tmp
+// Ensure the QRS directory exists before saving files
+const QRS_DIRECTORY = path.join(__dirname, "../../../QRS");
+if (!fs.existsSync(QRS_DIRECTORY)) {
+  fs.mkdirSync(QRS_DIRECTORY, { recursive: true });
+}
+
+// Configure Multer to store uploaded files in the QRS directory
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname,"../../../QRS")); // Store files in the /tmp directory
+    cb(null, QRS_DIRECTORY); // Store files in the QRS directory
   },
   filename: (req, file, cb) => {
     cb(null, file.originalname); // Save with the original filename
@@ -26,13 +32,13 @@ const scan = async (request, response) => {
 
     if (request.file) {
       try {
-        // Construct file path from /tmp
-        const filePath = path.join("../../../QRS/", request.file.filename);
+        // Construct file path in QRS directory
+        const filePath = path.join(QRS_DIRECTORY, request.file.filename);
 
         // Log file path for debugging purposes
         console.log("File path:", filePath);
 
-        // Check if the file exists in the /tmp directory
+        // Check if the file exists in the QRS directory
         if (!fs.existsSync(filePath)) {
           console.error("File not found at:", filePath);
           return response.json({
