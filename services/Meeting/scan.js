@@ -93,4 +93,14 @@ const scan = async (request, response) => {
 
     } catch (err) {
       console.error("Error handling file:", err);
-      return response.json({ status: "Error", message:
+      return response.json({ status: "Error", message: err.message });
+    }
+  } else {
+    return response.json({
+      status: "Error",
+      message: "Oops!, No File To Upload",
+    });
+  }
+};
+
+module.exports = scan;
