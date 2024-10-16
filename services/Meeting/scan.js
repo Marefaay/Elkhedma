@@ -1,18 +1,23 @@
 const QrCode = require("qrcode-reader");
 const jimp = require("jimp");
 const fs = require("fs");
-const path = require("path"); // Add path module for path handling
+const path = require("path");
 const userModel = require("../../models/userModel");
 const meetingModel = require("../../models/meetingModel");
 
 const scan = async (request, response) => {
   if (request.file) {
     try {
-      // Build the correct file path
-      const filePath = path.join(__dirname, "../../../QRS", request.file.filename);
-console.log(filePath)
-      // Check if file exists before reading
+      // Use /tmp directory for storing files temporarily
+      const tempDir = "/tmp";  // Temporary directory in cloud environments
+      const filePath = path.join(tempDir, request.file.filename);
+
+      // Log the file path for debugging purposes
+      console.log("Constructed file path:", filePath);
+
+      // Check if the file exists in the temp directory
       if (!fs.existsSync(filePath)) {
+        console.error("File not found:", filePath);
         return response.json({
           status: "Error",
           message: "File not found",
@@ -26,62 +31,66 @@ console.log(filePath)
 
       qrcode.callback = async (err, value) => {
         if (err) {
-          console.error(err);
-          return response.json({ message: "Invalid QR Code", error: err });
+          console.error("Error decoding QR code:", err);
+          return response.json({ status: "Error", message: "Invalid QR Code", error: err });
         } else {
-          const resultData = JSON.parse(value.result);
-          console.log(resultData);
+          try {
+            const resultData = JSON.parse(value.result);
+            console.log("QR Code data:", resultData);
 
-          const user = await userModel.findOne({ _id: request.id });
-          if (!user) {
-            return response.json({
-              status: "Error",
-              message: "Oops!, User Not found",
+            // Find the user by their ID
+            const user = await userModel.findOne({ _id: request.id });
+            if (!user) {
+              console.error("User not found with ID:", request.id);
+              return response.json({
+                status: "Error",
+                message: "Oops!, User Not found",
+              });
+            }
+            console.log("User found:", user);
+
+            // Find the meeting by the name from the QR code
+            const meeting = await meetingModel.findOne({
+              meetingName: resultData[0].meetingName,
             });
-          }
-          console.log(user);
+            if (!meeting) {
+              console.error("Meeting not found:", resultData[0].meetingName);
+              return response.json({
+                status: "Error",
+                message: "Oops!, Meeting Not Found",
+              });
+            }
+            console.log("Meeting found:", meeting);
 
-          const meeting = await meetingModel.findOne({
-            meetingName: resultData[0].meetingName,
-          });
-          if (!meeting) {
+            // Check if user has already recorded attendance for this meeting
+            if (user.meeting.includes(meeting._id)) {
+              return response.json({
+                status: "Error",
+                message: "Oops!, You Already Recorded Attendance for this Meeting",
+              });
+            }
+
+            // Add meeting to user's attendance and save
+            user.meeting.push(meeting._id);
+            await user.save();
+
             return response.json({
-              status: "Error",
-              message: "Oops!, Meeting Not Found",
+              status: "Success",
+              message: "Congratulations, Meeting Attendance Recorded Successfully",
             });
+          } catch (innerErr) {
+            console.error("Error processing QR code data:", innerErr);
+            return response.json({ status: "Error", message: innerErr.message });
           }
-          console.log(meeting);
-
-          if (user.meeting.includes(meeting._id)) {
-            return response.json({
-              status: "Error",
-              message: "Oops!, You Already Recorded Attendance for this Meeting",
-            });
-          }
-
-          user.meeting.push(meeting._id);
-          await user.save();
-
-          return response.json({
-            status: "Success",
-            message: "Congratulations, Meeting Attendance Recorded Successfully",
-          });
         }
       };
 
+      // Decode the QR code from the image
       qrcode.decode(image.bitmap);
 
-      // Delete the file after processing
+      // Optionally delete the file after processing
       fs.unlinkSync(filePath);
-    } catch (err) {
-      return response.json({ status: "Error", message: err.message });
-    }
-  } else {
-    return response.json({
-      status: "Error",
-      message: "Oops!, No File To Upload",
-    });
-  }
-};
 
-module.exports = scan;
+    } catch (err) {
+      console.error("Error handling file:", err);
+      return response.json({ status: "Error", message:
