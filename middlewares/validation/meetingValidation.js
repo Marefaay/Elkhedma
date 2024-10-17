@@ -10,7 +10,7 @@ const schema = joi.object({
   meetingTime: joi
     .string()
     .required()
-    .pattern(/\d{1,2}(pm|am)/i),
+    .pattern(/\d{1,2}:\d{1,2} (PM|AM)/i),
 });
 
 const meetingValidation = async (request, response, next) => {
