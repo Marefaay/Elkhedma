@@ -58,9 +58,7 @@ const scan = async (request, response) => {
         }
       };
       qrcode.decode(image.bitmap);
-      // fs.unlinkSync(
-      //   path.join(__dirname + ` ../../../QRS/${request.file.filename}`)
-      // );
+      fs.unlinkSync(pth.join(__dirname + ` ../../../QRS/${request.file.filename}`));
     } catch (err) {
       return response.json({ status: "Error", message: err.message });
     }
