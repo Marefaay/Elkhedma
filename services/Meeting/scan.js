@@ -4,12 +4,13 @@ const jimp = require("jimp");
 const fs = require("fs");
 const userModel = require("../../models/userModel");
 const meetingModel = require("../../models/meetingModel");
+const path = require("path");
 const scan = async (request, response) => {
   if (request.file) {
     try {
       //read qr code
       const buffer = fs.readFileSync(
-        __dirname + `../../../QRS/${request.file.filename}`
+        path.join(__dirname + `../../../QRS/${request.file.filename}`)
       );
       //read qr code as a buffer
       const image = await jimp.read(buffer);
@@ -57,7 +58,9 @@ const scan = async (request, response) => {
         }
       };
       qrcode.decode(image.bitmap);
-      fs.unlinkSync(__dirname + `../../../QRS/${request.file.filename}`);
+      // fs.unlinkSync(
+      //   path.join(__dirname + ` ../../../QRS/${request.file.filename}`)
+      // );
     } catch (err) {
       return response.json({ status: "Error", message: err.message });
     }

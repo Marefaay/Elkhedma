@@ -51,8 +51,8 @@ router.post(
 );
 router.get("/meetings/all-meetings", adminAutherization, allMeetings);
 router.delete(
-  "/meetings/delete-meeting/:id",
-  objectIdValidation,
+  "/meetings/delete-meeting",
+ 
   adminAutherization,
   deleteMeeting
 );

@@ -14,7 +14,9 @@ const meetingSchema = mongoose.Schema(
         // publicId: null,
       },
     },
-    createdBy: {type:mongoose.Types.ObjectId, ref: "Admin" },
+    presentUser: [],
+
+    createdBy: { type: mongoose.Types.ObjectId, ref: "Admin" },
   },
   { timestamps: true }
 );

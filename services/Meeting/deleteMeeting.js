@@ -1,9 +1,9 @@
 const meetingModel = require("../../models/meetingModel");
 
 const deleteMeeting = async (request, response) => {
-  const { id } = request.params;
+  const { meetingName } = request.body;
   //find meeting
-  const meeting = await meetingModel.findOne({ _id: id });
+  const meeting = await meetingModel.findOne({ meetingName });
   //meeting not exist
   if (!meeting) {
     return response.json({
@@ -13,7 +13,7 @@ const deleteMeeting = async (request, response) => {
   }
   //meeting is exist
   //delte it
-  await meetingModel.deleteOne({ _id: id });
+  await meetingModel.deleteOne({ meetingName });
   //response
   return response.json({
     status: "Success",
