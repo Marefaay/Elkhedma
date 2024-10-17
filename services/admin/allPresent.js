@@ -1,8 +1,8 @@
 const meetingModel = require("../../models/meetingModel");
 const userModel = require("../../models/userModel");
-const XLSX = require("xlsx"); // Require the XLSX package
-const fs = require("fs"); // To manage file system operations
-const path = require("path"); // To manage file paths
+const XLSX = require("xlsx");
+const fs = require("fs");
+const path = require("path");
 const os = require("os");
 
 const allPresent = async (request, response) => {
@@ -68,25 +68,38 @@ const allPresent = async (request, response) => {
   const ws = XLSX.utils.aoa_to_sheet(wsData); // Convert data to sheet format
   XLSX.utils.book_append_sheet(wb, ws, "Present Users"); // Append the sheet to the workbook
 
-  // Correctly get the home directory
+  // Get the home directory and the path to the Downloads folder
   const homeDir = os.homedir();
+  const downloadsDir = path.join(homeDir, "Downloads");
+
+  // Check if the Downloads directory exists, if not, create it
+  if (!fs.existsSync(downloadsDir)) {
+    fs.mkdirSync(downloadsDir, { recursive: true }); // Create the Downloads folder if it doesn't exist
+  }
 
   // Write the file to the user's Downloads directory
   const filePath = path.join(
-    homeDir,
-    "Downloads",
+    downloadsDir,
     `PresentUsers_${meeting.meetingName}.xlsx`
   );
   console.log(filePath);
 
   // Save the file
-  XLSX.writeFile(wb, filePath);
+  try {
+    XLSX.writeFile(wb, filePath);
 
-  // Optionally, inform the user that the file was saved successfully.
-  return response.json({
-    status: "Success",
-    message: `All present users downloaded successfully to ${filePath}`,
-  });
+    // Inform the user that the file was saved successfully
+    return response.json({
+      status: "Success",
+      message: `All present users downloaded successfully to ${filePath}`,
+    });
+  } catch (error) {
+    console.error("Error writing file: ", error);
+    return response.json({
+      status: "Error",
+      message: "Error in writing the file",
+    });
+  }
 };
 
 module.exports = allPresent;
