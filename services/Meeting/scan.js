@@ -1,7 +1,7 @@
 const QrCode = require("qrcode-reader");
 const jimp = require("jimp");
 const fs = require("fs");
-const path = require("path");  // Import path module
+const path = require("path");
 const userModel = require("../../models/userModel");
 const meetingModel = require("../../models/meetingModel");
 
@@ -9,8 +9,13 @@ const scan = async (request, response) => {
   if (request.file) {
     try {
       const qrFilePath = path.join(__dirname, "../../../QRS", request.file.filename);
-      console.log("Attempting to read file:", qrFilePath);
+      console.log("Uploaded file:", request.file.filename);
+      console.log("File path:", qrFilePath);
       
+      if (!fs.existsSync(qrFilePath)) {
+        return response.json({ status: "Error", message: "File does not exist." });
+      }
+
       const buffer = fs.readFileSync(qrFilePath);
       const image = await jimp.read(buffer);
       const qrcode = new QrCode();
@@ -25,12 +30,11 @@ const scan = async (request, response) => {
           if (!user) {
             return response.json({ status: "Error", message: "User Not found" });
           }
-          
+
           const meeting = await meetingModel.findOne({ meetingName: resultData[0].meetingName });
           if (!meeting) {
             return response.json({ status: "Error", message: "Meeting Not Found" });
           }
-          
           if (user.meeting.includes(meeting._id)) {
             return response.json({ status: "Error", message: "Attendance already recorded for this meeting" });
           }
@@ -40,8 +44,9 @@ const scan = async (request, response) => {
           return response.json({ status: "Success", message: "Meeting Attendance Recorded Successfully" });
         }
       };
-      
+
       qrcode.decode(image.bitmap);
+      
       if (fs.existsSync(qrFilePath)) {
         fs.unlinkSync(qrFilePath);
       }
