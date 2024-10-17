@@ -1,130 +1,71 @@
 const QrCode = require("qrcode-reader");
 const jimp = require("jimp");
+// const hh = require("../../QRS");
 const fs = require("fs");
-const path = require("path");
-const multer = require("multer"); // Multer for file uploads
 const userModel = require("../../models/userModel");
 const meetingModel = require("../../models/meetingModel");
-
-// Ensure the QRS directory exists before saving files
-const QRS_DIRECTORY = path.join(__dirname, "../../../QRS");
-if (!fs.existsSync(QRS_DIRECTORY)) {
-  fs.mkdirSync(QRS_DIRECTORY, { recursive: true });
-}
-
-// Configure Multer to store uploaded files in the QRS directory
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, QRS_DIRECTORY); // Store files in the QRS directory
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.originalname); // Save with the original filename
-  }
-});
-const upload = multer({ storage: storage });
-
 const scan = async (request, response) => {
-  upload.single('file')(request, response, async (err) => {
-    if (err) {
-      console.error("Error during file upload:", err);
-      return response.json({ status: "Error", message: "File upload failed" });
-    }
-
-    if (request.file) {
-      try {
-        // Construct file path in QRS directory
-        const filePath = path.join(QRS_DIRECTORY, request.file.filename);
-
-        // Log file path for debugging purposes
-        console.log("File path:", filePath);
-
-        // Check if the file exists in the QRS directory
-        if (!fs.existsSync(filePath)) {
-          console.error("File not found at:", filePath);
+  if (request.file) {
+    try {
+      //read qr code
+      const buffer = fs.readFileSync(
+        __dirname + `../../../QRS/${request.file.filename}`
+      );
+      //read qr code as a buffer
+      const image = await jimp.read(buffer);
+      const qrcode = new QrCode();
+      qrcode.callback = async (err, value) => {
+        if (err) {
+          console.error(err);
+          return response.json({ message: "Invalid QR Code", error: err });
+        } else {
+          //convert data from string to json
+          const resultData = await JSON.parse(value.result);
+          console.log(resultData);
+          //find user
+          const user = await userModel.findOne({ _id: request.id });
+          if (!user) {
+            return response.json({
+              status: "Error",
+              message: "Oops!,User Not found",
+            });
+          }
+          console.log(user);
+          //find meeting
+          const meeting = await meetingModel.findOne({
+            meetingName: resultData[0].meetingName,
+          });
+          if (!meeting) {
+            return response.json({
+              status: "Error",
+              message: "oops!,Meeting Is Not Founds",
+            });
+          }
+          console.log(meeting);
+          if (user.meeting.includes(meeting._id)) {
+            return response.json({
+              status: "Error",
+              message: "Oops!,You Already Record Attendance fro this meeting",
+            });
+          }
+          user.meeting.push(meeting._id);
+          await user.save();
           return response.json({
-            status: "Error",
-            message: "File not found",
+            status: "Success",
+            message: "Congratularrions,Meeting Attendance Reorded Succefully",
           });
         }
-
-        // Read the QR code from the file
-        const buffer = fs.readFileSync(filePath);
-        const image = await jimp.read(buffer);
-        const qrcode = new QrCode();
-
-        qrcode.callback = async (err, value) => {
-          if (err) {
-            console.error("Error decoding QR code:", err);
-            return response.json({ status: "Error", message: "Invalid QR Code", error: err });
-          } else {
-            try {
-              const resultData = JSON.parse(value.result);
-              console.log("QR Code data:", resultData);
-
-              // Find the user by their ID
-              const user = await userModel.findOne({ _id: request.id });
-              if (!user) {
-                console.error("User not found with ID:", request.id);
-                return response.json({
-                  status: "Error",
-                  message: "Oops!, User Not found",
-                });
-              }
-              console.log("User found:", user);
-
-              // Find the meeting by the name from the QR code
-              const meeting = await meetingModel.findOne({
-                meetingName: resultData[0].meetingName,
-              });
-              if (!meeting) {
-                console.error("Meeting not found:", resultData[0].meetingName);
-                return response.json({
-                  status: "Error",
-                  message: "Oops!, Meeting Not Found",
-                });
-              }
-              console.log("Meeting found:", meeting);
-
-              // Check if user has already recorded attendance for this meeting
-              if (user.meeting.includes(meeting._id)) {
-                return response.json({
-                  status: "Error",
-                  message: "Oops!, You Already Recorded Attendance for this Meeting",
-                });
-              }
-
-              // Add meeting to user's attendance and save
-              user.meeting.push(meeting._id);
-              await user.save();
-
-              return response.json({
-                status: "Success",
-                message: "Congratulations, Meeting Attendance Recorded Successfully",
-              });
-            } catch (innerErr) {
-              console.error("Error processing QR code data:", innerErr);
-              return response.json({ status: "Error", message: innerErr.message });
-            }
-          }
-        };
-
-        // Decode the QR code from the image
-        qrcode.decode(image.bitmap);
-
-        // Optionally delete the file after processing
-        fs.unlinkSync(filePath);
-
-      } catch (err) {
-        console.error("Error handling file:", err);
-        return response.json({ status: "Error", message: err.message });
-      }
-    } else {
-      return response.json({
-        status: "Error",
-        message: "Oops!, No File To Upload",
-      });
+      };
+      qrcode.decode(image.bitmap);
+      fs.unlinkSync(__dirname + `../../../QRS/${request.file.filename}`);
+    } catch (err) {
+      return response.json({ status: "Error", message: err.message });
     }
-  });
+  } else {
+    return response.json({
+      status: "Error",
+      message: "Oops!,No File To Upload",
+    });
+  }
 };
-
 module.exports = scan;
