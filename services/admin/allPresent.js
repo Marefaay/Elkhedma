@@ -32,16 +32,17 @@ const allPresent = async (request, response) => {
     });
   }
 
-  // Process all users and their meetings
-  await Promise.all(users.map(async (user) => {
-    await Promise.all(user.meeting.map(async (meetingId) => {
+  // Process users one by one
+  for (const user of users) {
+    for (const meetingId of user.meeting) {
       const meet = await meetingModel.findOne({ _id: meetingId });
       if (meet && meet.meetingName === meetingName) {
         console.log(user.username);
         presentUser.push(user.username);
+        break; // Stop checking other meetings for this user once a match is found
       }
-    }));
-  }));
+    }
+  }
 
   // Send the final response after all processing is done
   const userCount = presentUser.length;
